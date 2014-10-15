@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="hmac.security.authentication.listener" class="Gremo\HmacAuthenticationBundle\Security\Firewall\HmacAuthenticationListener" abstract="true">
+            <argument /> <!-- security.context or security.token_storage (>=2.6) -->
+            <argument type="service" id="security.authentication.manager" />
+            <argument /><!-- authentication header name -->
+        </service>
+
+        <service id="hmac.security.authentication.provider" class="Gremo\HmacAuthenticationBundle\Security\Authentication\Provider\HmacAuthenticationProvider" abstract="true">
+            <argument /><!-- user provider -->
+            <argument /><!-- service label -->
+            <argument /><!-- hashing algorithm -->
+            <argument /><!-- verify headers -->
+        </service>
+    </services>
+</container>

@@ -1,0 +1,21 @@
+{
+    "name": "gremo/hmac-authentication-bundle",
+    "type": "symfony-bundle",
+    "description": "Symfony 2 bundle adding REST HMAC HTTP authentication",
+    "keywords": ["REST", "authentication", "hmac", "security"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Marco Polichetti",
+            "email": "gremo1982@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": { "Gremo\\HmacAuthenticationBundle\\": "" }
+    },
+    "require": {
+        "php": ">=5.3.3",
+        "symfony/framework-bundle": "~2.3",
+        "symfony/security-bundle": "~2.3"
+    }
+}
