@@ -1,6 +1,6 @@
-[![Dependencies Status](https://depending.in/gremo/GremoHmacAuthenticationBundle.png)](http://depending.in/gremo/GremoHmacAuthenticationBundle)
-
 # GremoHmacAuthenticationBundle
+[![GitHub issues](https://img.shields.io/github/issues/gremo/GremoHmacAuthenticationBundle.svg?style=flat-square)](https://github.com/gremo/GremoHmacAuthenticationBundle/issues) [![Downloads total](https://img.shields.io/packagist/dt/gremo/hmac-authentication-bundle.svg?style=flat-square)](https://packagist.org/packages/gremo/hmac-authentication-bundle)
+
 Symfony 2 bundle adding REST HMAC HTTP authentication.
 
 ## Installation
