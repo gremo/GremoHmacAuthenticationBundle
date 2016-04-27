@@ -78,7 +78,7 @@ class HmacAuthenticationProvider implements AuthenticationProviderInterface
      */
     private function validateServiceLabel($serviceLabel)
     {
-        return $this->serviceLabel === $serviceLabel;
+        return hash_equals($this->serviceLabel, $serviceLabel);
     }
 
     /**
@@ -91,8 +91,7 @@ class HmacAuthenticationProvider implements AuthenticationProviderInterface
      */
     private function validateSignature(Request $request, $providedSignature, $key)
     {
-        return $providedSignature ===
-            $this->generateHmacSignature($this->buildCanonicalStringFromRequest($request), $key);
+        return hash_equals($this->generateHmacSignature($this->buildCanonicalStringFromRequest($request), $key), $providedSignature);
     }
 
     /**
