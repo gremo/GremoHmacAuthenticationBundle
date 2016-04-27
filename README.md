@@ -38,9 +38,9 @@ Protect part of your application in `security.yml` using the `hmac` key:
 firewalls:
     # ...
     hmac_secured:
-        pattern: /api/.*
+        pattern: ^/api
         stateless: true  # HMAC is stateless!
-        http:
+        hmac:
             auth_header: Authorization # Name of the header to inspect
             service_label: HMAC        # Service name/id
             algorithm: sha256          # Hashing algoritm, see hash_algos()
@@ -48,7 +48,7 @@ firewalls:
 ```
 
 ## How it works
-The authentication manager will inspect the `auth_header` looking for the following pattern:
+The authentication manager will inspect the `auth_header` header with the following pattern:
 
 ```
 <auth_header>: <service_label> <client_id>:<signature>
@@ -65,14 +65,61 @@ If the service label matches, the manager loads the user with `<client_id>` user
                      <verify_headerN>;
 ```
 
-Note that both **query params and verify headers are sorted** before calculating the signature.
+Note that both **query params and headers are sorted** before calculating the signature.
 
-An example canonical string with `verify_headers: Content-Type, Content-MD5, Date` (note the LF where `Content-MD5` should appear):
+Consider the following **configuration**:
+
+```yml
+security:
+	# ...
+    providers:
+        in_memory:
+            memory:
+                users:
+                    foo: { password: bar }
+
+	firewalls:
+		hmac_secured:
+		    pattern: ^/
+		    stateless: true
+			provider: in_memory
+		    hmac:
+		        auth_header: Authorization
+		        service_label: HMAC
+		        algorithm: sha256
+		        verify_headers: [Date, Accept, Content-MD5]
+
+		# ...
+```
+
+And the **raw HTTP request**:
+
+```
+GET /?b=c&a= HTTP/1.1
+Accept: application/json
+Host: localhost:8080
+Authorization: HMAC foo:ZWQyNmYwZWM1MmZkYmIyNTgzYjJiYWQ2Zjg3OGJkYjIzNzU2YTBlYjQ3NGY5ZDg1YWE5ZjYwN2Q1ODg1NWI1MQ==
+Date: Mon, 26 Mar 2007 19:37:58 +0000
+```
+
+The **canonical string** would be (note the LF where `Content-MD5` should appear):
 
 ```
 GET
-/foo/bar?a&b=c
+/?a=&b=c
 application/json
 
-Date: Mon, 26 Mar 2007 19:37:58 +0000
+Mon, 26 Mar 2007 19:37:58 +0000
+```
+
+The **hashed value** is (plain password is `bar`):
+
+```
+ed26f0ec52fdbb2583b2bad6f878bdb23756a0eb474f9d85aa9f607d58855b51
+```
+
+And finally the **base64 encoded value** (that is the signature of `Authorization` header):
+
+```
+ZWQyNmYwZWM1MmZkYmIyNTgzYjJiYWQ2Zjg3OGJkYjIzNzU2YTBlYjQ3NGY5ZDg1YWE5ZjYwN2Q1ODg1NWI1MQ==
 ```
