@@ -137,7 +137,7 @@ class HmacAuthenticationProvider implements AuthenticationProviderInterface
         // Sort headers and add them, replacing empty one with LF
         sort($this->signedHeaders);
         foreach ($this->signedHeaders as $headerName) {
-            $parts[] = $request->headers->get($headerName, "\n");
+            $parts[] = $request->headers->get($headerName);
         }
 
         // Glue tokens togheter with LF
