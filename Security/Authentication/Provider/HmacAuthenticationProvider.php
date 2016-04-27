@@ -17,6 +17,7 @@ use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProvid
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Component\Security\Core\Util\StringUtils;
 
 class HmacAuthenticationProvider implements AuthenticationProviderInterface
 {
@@ -91,8 +92,7 @@ class HmacAuthenticationProvider implements AuthenticationProviderInterface
      */
     private function validateSignature(Request $request, $providedSignature, $key)
     {
-        return $providedSignature ===
-            $this->generateHmacSignature($this->buildCanonicalStringFromRequest($request), $key);
+        return StringUtils::equals($providedSignature, $this->generateHmacSignature($this->buildCanonicalStringFromRequest($request), $key));
     }
 
     /**
