@@ -74,8 +74,8 @@ class HmacAuthenticationListener implements ListenerInterface
 
                         // Success
                         return;
+                    } catch (AuthenticationException $exception) {
                     }
-                    catch (AuthenticationException $exception) {}
                 }
             }
         }

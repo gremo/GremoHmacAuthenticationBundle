@@ -34,8 +34,13 @@ class HmacFactory implements SecurityFactoryInterface
             ->replaceArgument(3, $config['verify_headers']);
 
         $listenerId = 'security.authentication.listener.hmac.'.$id;
+        $securityId = new Reference(
+            $container->hasDefinition('security.token_storage')
+                ? 'security.token_storage'
+                : 'security.context'
+        );
         $container->setDefinition($listenerId, new DefinitionDecorator('hmac.security.authentication.listener'))
-            ->replaceArgument(0, new Reference($container->hasDefinition('security.token_storage') ? 'security.token_storage' : 'security.context'))
+            ->replaceArgument(0, $securityId)
             ->replaceArgument(2, $config['auth_header']);
 
         return array($providerId, $listenerId, $defaultEntryPoint);
@@ -73,7 +78,9 @@ class HmacFactory implements SecurityFactoryInterface
                 ->scalarNode('algorithm')
                     ->beforeNormalization()
                         ->ifString()
-                        ->then(function ($v) { return strtolower($v); })
+                        ->then(function ($v) {
+                            return strtolower($v);
+                        })
                     ->end()
                     ->validate()
                         ->ifNotInArray(hash_algos())
@@ -84,7 +91,9 @@ class HmacFactory implements SecurityFactoryInterface
                 ->arrayNode('verify_headers')
                     ->beforeNormalization()
                         ->ifString()
-                        ->then(function ($v) { return array_map('trim', explode(',', $v)); })
+                        ->then(function ($v) {
+                            return array_map('trim', explode(',', $v));
+                        })
                     ->end()
                     ->prototype('scalar')->end()
                 ->end()

@@ -40,8 +40,12 @@ class HmacAuthenticationProvider implements AuthenticationProviderInterface
      */
     private $signedHeaders;
 
-    public function __construct(UserProviderInterface $userProvider, $serviceLabel, $hmacAlgorithm, array $signedHeaders)
-    {
+    public function __construct(
+        UserProviderInterface $userProvider,
+        $serviceLabel,
+        $hmacAlgorithm,
+        array $signedHeaders
+    ) {
         $this->userProvider = $userProvider;
         $this->serviceLabel = $serviceLabel;
         $this->hmacAlgorithm = $hmacAlgorithm;
@@ -91,7 +95,10 @@ class HmacAuthenticationProvider implements AuthenticationProviderInterface
      */
     private function validateSignature(Request $request, $providedSignature, $key)
     {
-        return hash_equals($this->generateHmacSignature($this->buildCanonicalStringFromRequest($request), $key), $providedSignature);
+        return hash_equals(
+            $this->generateHmacSignature($this->buildCanonicalStringFromRequest($request), $key),
+            $providedSignature
+        );
     }
 
     /**
