@@ -11,8 +11,8 @@
 
 namespace Gremo\HmacAuthenticationBundle\Security\Authentication;
 
-use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 
 class HmacUserToken extends AbstractToken
 {
