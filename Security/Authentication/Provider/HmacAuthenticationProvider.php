@@ -62,10 +62,13 @@ class HmacAuthenticationProvider implements AuthenticationProviderInterface
             $user = $this->userProvider->loadUserByUsername($token->getUsername());
 
             if ($this->validateSignature($token->getRequest(), $token->getSignature(), $user->getPassword())) {
-                $authenticatedToken = new HmacUserToken();
+                $authenticatedToken = new HmacUserToken($user->getRoles());
                 $authenticatedToken->setUser($user);
                 $authenticatedToken->setServiceLabel($token->getServiceLabel());
                 $authenticatedToken->setRequest($token->getRequest());
+
+                // Always set the token as authenticated regardless of the roles
+                $authenticatedToken->setAuthenticated(true);
 
                 return $authenticatedToken;
             }
