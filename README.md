@@ -71,25 +71,25 @@ Consider the following **configuration**:
 
 ```yml
 security:
-	# ...
+    # ...
     providers:
         in_memory:
             memory:
                 users:
                     foo: { password: bar }
 
-	firewalls:
-		hmac_secured:
-		    pattern: ^/
-		    stateless: true
-			provider: in_memory
-		    hmac:
-		        auth_header: Authorization
-		        service_label: HMAC
-		        algorithm: sha256
-		        verify_headers: [Date, Accept, Content-MD5]
+    firewalls:
+        hmac_secured:
+            pattern: ^/
+            stateless: true
+            provider: in_memory
+            hmac:
+                auth_header: Authorization
+                service_label: HMAC
+                algorithm: sha256
+                verify_headers: [Date, Accept, Content-MD5]
 
-		# ...
+        # ...
 ```
 
 And the **raw HTTP request**:
