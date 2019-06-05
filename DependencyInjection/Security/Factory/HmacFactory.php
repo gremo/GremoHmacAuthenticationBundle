@@ -16,6 +16,7 @@ use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\DependencyInjection\ChildDefinition;
 
 class HmacFactory implements SecurityFactoryInterface
 {
@@ -26,7 +27,7 @@ class HmacFactory implements SecurityFactoryInterface
     {
         $providerId = 'security.authentication.provider.hmac.'.$id;
         $container
-            ->setDefinition($providerId, new DefinitionDecorator('hmac.security.authentication.provider'))
+            ->setDefinition($providerId, $this->createChildDefinition('hmac.security.authentication.provider'))
             ->replaceArgument(0, new Reference($userProvider))
             ->replaceArgument(1, $config['service_label'])
             ->replaceArgument(2, $config['algorithm'])
@@ -38,7 +39,7 @@ class HmacFactory implements SecurityFactoryInterface
                 ? 'security.token_storage'
                 : 'security.context'
         );
-        $container->setDefinition($listenerId, new DefinitionDecorator('hmac.security.authentication.listener'))
+        $container->setDefinition($listenerId, $this->createChildDefinition('hmac.security.authentication.listener'))
             ->replaceArgument(0, $securityId)
             ->replaceArgument(2, $config['auth_header']);
 
@@ -97,5 +98,13 @@ class HmacFactory implements SecurityFactoryInterface
                     ->prototype('scalar')->end()
                 ->end()
             ->end();
+    }
+
+    private function createChildDefinition($parent)
+    {
+        if (class_exists('Symfony\Component\DependencyInjection\ChildDefinition')) {
+            return new ChildDefinition($parent);
+        }
+        return new DefinitionDecorator($parent);
     }
 }
